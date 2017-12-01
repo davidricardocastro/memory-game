@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Memory Game</title>
+
+
+    <style>
+        body {
+            background-color: red;
+            background-image: url('game_img/background2.jpg');
+        }
+
+        #table {
+            position: relative;
+            
+            width: 700px;
+            height: 560px;
+            background-color: rgba(143, 153, 51, 0.61);
+            border-radius: 20px;
+            padding: 10px;
+        }
+
+        #table>div {
+            background-image: url(game_img/card_back.jpg);
+            width: 120px;
+            height: 120px;            
+            margin: 10px;
+            border-style: none;
+            border-color: rgb(206, 24, 24);
+            
+            float: left;
+            text-align: center;
+            cursor: pointer;
+            
+            
+        }
+
+        
+
+        #newGame{
+            width: 200px;
+            height: 200px;
+           
+            position: fixed;
+            left: 800px;
+            top: 200px;
+            display: none;
+            
+            
+        }
+
+        #btn{
+            width: 400px;
+            height: 100px;
+            border-radius: 30px;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-size: 55px;
+            color: black;
+            background-color: rgba(143, 153, 51, 0.61);
+            border-color:rgb(143, 153, 51, 0.61);
+            
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="table"></div>
+
+<div id="newGame">
+
+    <button id="btn" onclick="newGame()">
+        Play Again?
+    </button>
+</div>
+
+
+    <script>
+        var cards = ['a.png', 'b.png', 'c.png', 'd.png', 'e.png', 'f.png', 'g.png', 'h.png', 'i.png', 'j.png', 'a.png', 'b.png', 'c.png', 'd.png', 'e.png', 'f.png', 'g.png', 'h.png', 'i.png', 'j.png'];
+        var values = [];
+        var card_ids = [];
+        var cards_flipped = 0;
+
+
+        //shuffles cards
+        function cardsShuffle() {
+            cards.sort(function (a, b) { return 0.5 - Math.random() });
+
+        };
+
+
+        function newGame() {
+            cards_flipped = 0;
+            var game = '';
+            cardsShuffle();
+            for (var i = 0; i < cards.length; i++) {
+                game += '<div class="back" id="card_' + i + '" onclick="flipCard(this,\'' + cards[i] + '\')"></div>';
+                //console.log(cards[i])
+                document.getElementById('newGame').style.display='none';
+            };
+
+            document.getElementById('table').innerHTML = game;
+        }
+        newGame();
+
+        function flipCard(tile, val) {
+            if (tile.innerHTML == "" && values.length < 2) {
+                //tile.style.background = '#FFF';
+
+                tile.innerHTML = '<div class="front" id="card"> <img src="game_img/'+val+'"> </div>';
+                if (values.length == 0) {
+                    values.push(val);
+                    card_ids.push(tile.id);
+                } else if (values.length == 1) {
+                    values.push(val);
+                    card_ids.push(tile.id);
+                    if (values[0] == values[1]) {
+                        cards_flipped += 2;
+                        // Clear both arrays
+                        values = [];
+                        card_ids = [];
+                        // Check to see if the whole table is cleared
+                        if (cards_flipped == cards.length) {
+                            //alert("All cards!! Play again?");
+                            document.getElementById('newGame').style.display='block';
+                            //document.getElementById('memory_board').innerHTML = "";
+                            //newBoard();
+                        }
+                    } else {
+                        function flip2Back() {
+                            // Flip the 2 cards back over
+                            var card_1 = document.getElementById(card_ids[0]);
+                            var card_2 = document.getElementById(card_ids[1]);
+                            card_1.style.background = 'url(game_img/card_back.jpg)';
+                            card_1.innerHTML = "";
+                            card_2.style.background = 'url(game_img/card_back.jpg)';
+                            card_2.innerHTML = "";
+                            // Clear both arrays
+                            values = [];
+                            card_ids = [];
+                        }
+                        setTimeout(flip2Back, 700);
+                    }
+                }
+            }
+        }
+
+    </script>
+
+
+
+</body>
+
+</html>
